@@ -1,5 +1,5 @@
 from typing import *
-import os
+import os, sys
 import re
 import glob
 
@@ -8,6 +8,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from modules import shared, devices, sd_models, errors
+
+now_dir = os.path.dirname(os.path.abspath(__file__))
+lora_path = os.path.join(now_dir, '..', '..', 'extensions-builtin/Lora')
+sys.path.insert(0, lora_path)
+import lora
+new_lora = 'lora_calc_updown' in dir(lora)
 
 metadata_tags_order = {"ss_sd_model_name": 1, "ss_resolution": 2, "ss_clip_skip": 3, "ss_num_train_images": 10, "ss_tag_frequency": 20}
 
@@ -620,6 +626,13 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
     wanted_names = tuple((x.name, x.multiplier) for x in loaded_lycos)
 
     weights_backup = getattr(self, "lora_backup_weights", None)
+    if weights_backup is None and not new_lora:
+        if isinstance(self, torch.nn.MultiheadAttention):
+            weights_backup = (self.in_proj_weight.to(devices.cpu, copy=True), self.out_proj.weight.to(devices.cpu, copy=True))
+        else:
+            weights_backup = self.weight.to(devices.cpu, copy=True)
+
+        self.lora_weights_backup = weights_backup
 
     if current_names != wanted_names:
         if weights_backup is not None and lora_names == ():
