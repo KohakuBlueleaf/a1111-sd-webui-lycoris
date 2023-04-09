@@ -13,14 +13,16 @@ class ExtraNetworkLyCORIS(extra_networks.ExtraNetwork):
             params_list.append(extra_networks.ExtraNetworkParams(items=[additional, shared.opts.extra_networks_default_multiplier]))
 
         names = []
-        multipliers = []
+        te_multipliers = []
+        unet_multipliers = []
         for params in params_list:
             assert len(params.items) > 0
 
             names.append(params.items[0])
-            multipliers.append(float(params.items[1]) if len(params.items) > 1 else 1.0)
+            te_multipliers.append(float(params.items[1]) if len(params.items) > 1 else 1.0)
+            unet_multipliers.append(float(params.items[2]) if len(params.items) > 2 else te_multipliers[-1])
 
-        lycoris.load_lycos(names, multipliers)
+        lycoris.load_lycos(names, te_multipliers, unet_multipliers)
 
     def deactivate(self, p):
         pass

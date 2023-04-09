@@ -166,7 +166,8 @@ class LycoOnDisk:
 class LycoModule:
     def __init__(self, name):
         self.name = name
-        self.multiplier = 1.0
+        self.te_multiplier = 1.0
+        self.unet_multiplier = 1.0
         self.modules = {}
         self.mtime = None
 
@@ -313,7 +314,7 @@ def load_lyco(name, filename):
             continue
         
         if lyco_key == "diff":
-            weight = weight.to(device=devices.device, dtype=devices.dtype)
+            weight = weight.to(device=devices.cpu, dtype=devices.dtype)
             weight.requires_grad_(False)
             lyco_module = FullModule()
             lyco.modules[key] = lyco_module
@@ -458,7 +459,7 @@ def load_lyco(name, filename):
     return lyco
 
 
-def load_lycos(names, multipliers=None):
+def load_lycos(names, te_multipliers=None, unet_multipliers=None):
     already_loaded = {}
 
     for lyco in loaded_lycos:
@@ -485,7 +486,8 @@ def load_lycos(names, multipliers=None):
             print(f"Couldn't find Lora with name {name}")
             continue
 
-        lyco.multiplier = multipliers[i] if multipliers else 1.0
+        lyco.te_multiplier = te_multipliers[i] if te_multipliers else 1.0
+        lyco.unet_multiplier = unet_multipliers[i] if unet_multipliers else lyco.te_multiplier
         loaded_lycos.append(lyco)
 
 
@@ -500,6 +502,7 @@ def _rebuild_cp_decomposition(up, down, mid):
 
 
 def rebuild_weight(module, orig_weight: torch.Tensor) -> torch.Tensor:
+    output_shape: Sized
     if module.__class__.__name__ == 'LycoUpDownModule':
         up = module.up_model.weight.to(orig_weight.device, dtype=orig_weight.dtype)
         down = module.down_model.weight.to(orig_weight.device, dtype=orig_weight.dtype)
@@ -606,7 +609,7 @@ def rebuild_weight(module, orig_weight: torch.Tensor) -> torch.Tensor:
 def lyco_calc_updown(lyco, module, target):
     with torch.no_grad():
         updown = rebuild_weight(module, target)
-        updown = updown * lyco.multiplier * (module.alpha / module.dim if module.alpha and module.dim else 1.0)
+        updown = updown * (module.alpha / module.dim if module.alpha and module.dim else 1.0)
         return updown
 
 
@@ -623,7 +626,7 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
 
     current_names = getattr(self, "lyco_current_names", ())
     lora_names = getattr(self, "lora_current_names", ())
-    wanted_names = tuple((x.name, x.multiplier) for x in loaded_lycos)
+    wanted_names = tuple((x.name, x.te_multiplier, x.unet_multiplier) for x in loaded_lycos)
 
     weights_backup = getattr(self, "lora_weights_backup", None)
     if weights_backup is None:
@@ -643,8 +646,13 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
 
         for lyco in loaded_lycos:
             module = lyco.modules.get(lyco_layer_name, None)
+            multiplier = (
+                lyco.te_multiplier if 'transformer' in lyco_layer_name[:20] 
+                else lyco.unet_multiplier
+            )
             if module is not None and hasattr(self, 'weight'):
-                self.weight += lyco_calc_updown(lyco, module, self.weight)
+                # print(lyco_layer_name, multiplier)
+                self.weight += lyco_calc_updown(lyco, module, self.weight) * multiplier
                 continue
 
             module_q = lyco.modules.get(lyco_layer_name + "_q_proj", None)
@@ -730,7 +738,7 @@ def list_available_lycos():
         available_lycos[name] = LycoOnDisk(name, filename)
 
 
-available_lycos = {}
-loaded_lycos = []
+available_lycos: Dict[str, LycoOnDisk] = {}
+loaded_lycos: List[LycoModule] = []
 
 list_available_lycos()
