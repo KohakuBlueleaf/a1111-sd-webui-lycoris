@@ -625,13 +625,12 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
     lora_names = getattr(self, "lora_current_names", ())
     wanted_names = tuple((x.name, x.multiplier) for x in loaded_lycos)
 
-    weights_backup = getattr(self, "lora_backup_weights", None)
-    if weights_backup is None and not new_lora:
+    weights_backup = getattr(self, "lora_weights_backup", None)
+    if weights_backup is None:
         if isinstance(self, torch.nn.MultiheadAttention):
             weights_backup = (self.in_proj_weight.to(devices.cpu, copy=True), self.out_proj.weight.to(devices.cpu, copy=True))
         else:
             weights_backup = self.weight.to(devices.cpu, copy=True)
-
         self.lora_weights_backup = weights_backup
 
     if current_names != wanted_names:
