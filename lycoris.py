@@ -642,21 +642,38 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
     lora_names = getattr(self, "lora_current_names", ())
     wanted_names = tuple((x.name, x.te_multiplier, x.unet_multiplier, x.dyn_dim) for x in loaded_lycos)
 
-    weights_backup = getattr(self, "lora_weights_backup", None)
+    weights_backup = getattr(self, "lyco_weights_backup", None)
+    lora_weights_backup = getattr(self, "lora_weights_backup", None)
     if weights_backup is None:
+        # print('lyco save weight')
         if isinstance(self, torch.nn.MultiheadAttention):
-            weights_backup = (self.in_proj_weight.to(devices.cpu, copy=True), self.out_proj.weight.to(devices.cpu, copy=True))
+            weights_backup = (
+                self.in_proj_weight.to(devices.cpu, copy=True), 
+                self.out_proj.weight.to(devices.cpu, copy=True)
+            )
         else:
             weights_backup = self.weight.to(devices.cpu, copy=True)
-        self.lora_weights_backup = weights_backup
+        self.lyco_weights_backup = weights_backup
+    elif lora_prev_names != lora_names:
+        # print('lyco remove weight')
+        self.lyco_weights_backup = None
+        lora_weights_backup = None
 
     if current_names != wanted_names or lora_prev_names != lora_names:
-        if weights_backup is not None and lora_names == ():
+        if weights_backup is not None and lora_names == lora_prev_names:
+            # print('lyco restore weight')
             if isinstance(self, torch.nn.MultiheadAttention):
                 self.in_proj_weight.copy_(weights_backup[0])
                 self.out_proj.weight.copy_(weights_backup[1])
             else:
                 self.weight.copy_(weights_backup)
+        elif lora_weights_backup is not None and lora_names == ():
+            # print('lora restore weight')
+            if isinstance(self, torch.nn.MultiheadAttention):
+                self.in_proj_weight.copy_(lora_weights_backup[0])
+                self.out_proj.weight.copy_(lora_weights_backup[1])
+            else:
+                self.weight.copy_(lora_weights_backup)
 
         for lyco in loaded_lycos:
             module = lyco.modules.get(lyco_layer_name, None)
