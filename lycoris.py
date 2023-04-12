@@ -722,7 +722,7 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
 
 def lyco_reset_cached_weight(self: Union[torch.nn.Conv2d, torch.nn.Linear]):
     setattr(self, "lyco_current_names", ())
-    setattr(self, "lora_weights_backup", None)
+    setattr(self, "lyco_weights_backup", None)
 
 
 def lyco_Linear_forward(self, input):
