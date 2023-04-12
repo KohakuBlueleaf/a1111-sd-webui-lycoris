@@ -177,6 +177,7 @@ class FullModule:
     def __init__(self):
         self.weight = None
         self.alpha = None
+        self.scale = None
         self.dim = None
         self.shape = None
 
@@ -187,6 +188,7 @@ class LycoUpDownModule:
         self.mid_model = None
         self.down_model = None
         self.alpha = None
+        self.scale = None
         self.dim = None
         self.shape = None
         self.bias = None
@@ -206,6 +208,7 @@ class LycoHadaModule:
         self.w2a = None
         self.w2b = None
         self.alpha = None
+        self.scale = None
         self.dim = None
         self.shape = None
         self.bias = None
@@ -215,6 +218,7 @@ class IA3Module:
     def __init__(self):
         self.w = None
         self.alpha = None
+        self.scale = None
         self.dim = None
         self.on_input = None
 
@@ -236,6 +240,7 @@ class LycoKronModule:
         self.w2a = None
         self.w2b = None
         self._alpha = None
+        self.scale = None
         self.dim = None
         self.shape = None
         self.bias = None
@@ -312,6 +317,10 @@ def load_lyco(name, filename):
 
         if lyco_key == "alpha":
             lyco_module.alpha = weight.item()
+            continue
+        
+        if lyco_key == "scale":
+            lyco_module.scale = weight.item()
             continue
         
         if lyco_key == "diff":
@@ -617,7 +626,8 @@ def lyco_calc_updown(lyco, module, target):
     with torch.no_grad():
         updown = rebuild_weight(module, target, lyco.dyn_dim)
         scale = (
-            module.alpha / lyco.dyn_dim if module.alpha and lyco.dyn_dim
+            module.scale if module.scale is not None
+            else module.alpha / lyco.dyn_dim if module.alpha and lyco.dyn_dim
             else module.alpha / module.dim if  module.alpha and module.dim
             else 1.0
         )
