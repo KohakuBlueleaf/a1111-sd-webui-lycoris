@@ -13,3 +13,5 @@ Install it and restart the webui
 And you will find "LyCORIS" tab in the extra networks page
 Use `<lyco:MODEL:WEIGHT>` to utilize the lycoris model
 ![image](https://user-images.githubusercontent.com/59680068/230762416-be1d3712-65f2-4dd1-ac7a-f403c914dd9b.png)
+
+The launch parameter `--lyco-dir` can be used to define LyCORIS models location path
