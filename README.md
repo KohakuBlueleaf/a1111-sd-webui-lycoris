@@ -38,5 +38,5 @@ And here is the list for arguments:
 | Argument    | What it does| default type and value|
 | ----------- | ----------- | ----------- |
 | te          | the weight for text encoder | `float: 1.0`|
-| unet   | the weight for UNet | `float: 1.0`|
+| unet   | the weight for UNet, when it is None, it use same value as te | `float: None`|
 | dyn | How many row you want to utilize when using dylora, if you set to 0, it will disable the dylora| `int: None` |
