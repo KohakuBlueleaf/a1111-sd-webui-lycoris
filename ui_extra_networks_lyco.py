@@ -21,7 +21,11 @@ class ExtraNetworksPageLyCORIS(ui_extra_networks.ExtraNetworksPage):
                 "preview": self.find_preview(path),
                 "description": self.find_description(path),
                 "search_term": self.search_terms_from_path(lyco_on_disk.filename),
-                "prompt": json.dumps(f"<lyco:{name}:") + " + opts.extra_networks_default_multiplier + " + json.dumps(">"),
+                "prompt": (
+                    json.dumps(f"<lyco:{name}")
+                    + " + " + json.dumps(f':{shared.opts.extra_networks_default_multiplier}')
+                    + " + " + json.dumps(">")
+                ),
                 "local_preview": f"{path}.{shared.opts.samples_format}",
                 "metadata": json.dumps(lyco_on_disk.metadata, indent=4) if lyco_on_disk.metadata else None,
             }
