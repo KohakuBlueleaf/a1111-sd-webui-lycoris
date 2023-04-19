@@ -3,6 +3,12 @@
 An extension for loading lycoris model in sd-webui. 
 I made this stand alone extension (Use sd-webui's extra networks api) to avoid some conflict with other loras extensions.
 
+## How to install
+There are some options you can choose to install this extension
+* Open the extension tab and go to "available" tab, search "lycoris" to find this extension and then install it.
+* Open the extension tab and go to "from url" tab, copy-paste the url of this repo (https://github.com/KohakuBlueleaf/a1111-sd-webui-lycoris) and click install.
+* Manually clone this repo to the extension folder or download the zip.
+
 ### LyCORIS
 https://github.com/KohakuBlueleaf/LyCORIS
 
