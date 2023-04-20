@@ -9,6 +9,11 @@ There are some options you can choose to install this extension
 * Open the extension tab and go to "from url" tab, copy-paste the url of this repo (https://github.com/KohakuBlueleaf/a1111-sd-webui-lycoris) and click install.
 * Manually clone this repo to the extension folder or download the zip.
 
+## The version of stable-diffusion-webui
+Lot of people struggling on some bug or unexpected behavior after install the extension. We do some research and test on it and can only get this conclustion:<br>
+**Make sure your stable diffusion webui is after commit: a9fed7c3** <br>
+(a9fed7c3 itself should work, but if you meet problem on that commit, you should consider to update your sd-webui)
+
 ### LyCORIS
 https://github.com/KohakuBlueleaf/LyCORIS
 
