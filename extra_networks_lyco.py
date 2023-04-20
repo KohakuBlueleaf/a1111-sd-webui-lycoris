@@ -14,7 +14,7 @@ def parse_args(params:list):
     kwarg_list = {}
     
     for i in params:
-        if '=' in i:
+        if '=' in str(i):
             k, v = i.split('=', 1)
             kwarg_list[k] = v
         else:
@@ -35,6 +35,7 @@ def parse_args(params:list):
 class ExtraNetworkLyCORIS(extra_networks.ExtraNetwork):
     def __init__(self):
         super().__init__('lyco')
+        self.cache = ()
 
     def activate(self, p, params_list):
         additional = shared.opts.sd_lyco
@@ -64,7 +65,23 @@ class ExtraNetworkLyCORIS(extra_networks.ExtraNetwork):
             te_multipliers.append(te)
             unet_multipliers.append(unet)
             dyn_dims.append(dyn_dim)
-
+        
+        all_lycos = tuple(
+            (name, te, unet, dyn)
+            for name, te, unet, dyn in zip(names, te_multipliers, unet_multipliers, dyn_dims)
+        )
+        
+        if all_lycos != self.cache:
+            for name, te, unet, dyn in zip(names, te_multipliers, unet_multipliers, dyn_dims):
+                print(
+                    "========================================\n"
+                    f"Apply LyCORIS model: {name}\n"
+                    f"Text encoder weight: {te}\n"
+                    f"Unet weight: {unet}\n"
+                    f"DyLoRA Dim: {dyn_dim}"
+                )
+            print("========================================")
+            self.cache = all_lycos
         lycoris.load_lycos(names, te_multipliers, unet_multipliers, dyn_dims)
 
     def deactivate(self, p):

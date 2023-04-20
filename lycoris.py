@@ -285,7 +285,6 @@ KRON_KEY = {
 }
 
 def load_lyco(name, filename):
-    print('locon load lyco method')
     lyco = LycoModule(name)
     lyco.mtime = os.path.getmtime(filename)
 
@@ -714,7 +713,8 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
             if module is None:
                 continue
 
-            print(f'failed to calculate lyco weights for layer {lyco_layer_name}')
+            print(3, f'failed to calculate lyco weights for layer {lyco_layer_name}')
+            print(lyco_his, lyco.name not in lyco_his)
 
         setattr(self, "lora_prev_names", lora_names)
         setattr(self, "lyco_current_names", wanted_names)
