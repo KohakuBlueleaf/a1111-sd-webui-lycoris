@@ -72,13 +72,13 @@ class ExtraNetworkLyCORIS(extra_networks.ExtraNetwork):
         )
         
         if all_lycos != self.cache:
-            for name, te, unet, dyn in zip(names, te_multipliers, unet_multipliers, dyn_dims):
+            for name, te, unet, dyn in all_lycos:
                 print(
                     "========================================\n"
                     f"Apply LyCORIS model: {name}\n"
                     f"Text encoder weight: {te}\n"
                     f"Unet weight: {unet}\n"
-                    f"DyLoRA Dim: {dyn_dim}"
+                    f"DyLoRA Dim: {dyn}"
                 )
             print("========================================")
             self.cache = all_lycos

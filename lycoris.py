@@ -624,10 +624,17 @@ def rebuild_weight(module, orig_weight: torch.Tensor, dyn_dim: int=None) -> torc
 def lyco_calc_updown(lyco, module, target):
     with torch.no_grad():
         updown = rebuild_weight(module, target, lyco.dyn_dim)
+        if lyco.dyn_dim and module.dim:
+            dim = min(lyco.dyn_dim, module.dim)
+        elif lyco.dyn_dim:
+            dim = lyco.dyn_dim
+        elif module.dim:
+            dim = module.dim
+        else:
+            dim = None
         scale = (
             module.scale if module.scale is not None
-            else module.alpha / lyco.dyn_dim if module.alpha and lyco.dyn_dim
-            else module.alpha / module.dim if  module.alpha and module.dim
+            else module.alpha / dim if dim is not None
             else 1.0
         )
         # print(scale, module.alpha, module.dim, lyco.dyn_dim)
