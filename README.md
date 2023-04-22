@@ -3,6 +3,17 @@
 An extension for loading lycoris model in sd-webui. 
 I made this stand alone extension (Use sd-webui's extra networks api) to avoid some conflict with other loras extensions.
 
+## How to install
+There are some options you can choose to install this extension
+* Open the extension tab and go to "available" tab, search "lycoris" to find this extension and then install it.
+* Open the extension tab and go to "from url" tab, copy-paste the url of this repo (https://github.com/KohakuBlueleaf/a1111-sd-webui-lycoris) and click install.
+* Manually clone this repo to the extension folder or download the zip.
+
+## The version of stable-diffusion-webui
+Lot of people struggling on some bug or unexpected behavior after install the extension. We do some research and test on it and can only get this conclustion:<br>
+**Make sure your stable diffusion webui is after commit: a9fed7c3** <br>
+(a9fed7c3 itself should work, but if you meet problem on that commit, you should consider to update your sd-webui)
+
 ### LyCORIS
 https://github.com/KohakuBlueleaf/LyCORIS
 
@@ -38,5 +49,5 @@ And here is the list for arguments:
 | Argument    | What it does| default type and value|
 | ----------- | ----------- | ----------- |
 | te          | the weight for text encoder | `float: 1.0`|
-| unet   | the weight for UNet | `float: 1.0`|
+| unet   | the weight for UNet, when it is None, it use same value as te | `float: None`|
 | dyn | How many row you want to utilize when using dylora, if you set to 0, it will disable the dylora| `int: None` |
