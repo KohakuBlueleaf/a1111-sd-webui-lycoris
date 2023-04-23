@@ -634,7 +634,7 @@ def lyco_calc_updown(lyco, module, target):
             dim = None
         scale = (
             module.scale if module.scale is not None
-            else module.alpha / dim if dim is not None
+            else module.alpha / dim if dim is not None and module.alpha is not None
             else 1.0
         )
         # print(scale, module.alpha, module.dim, lyco.dyn_dim)
