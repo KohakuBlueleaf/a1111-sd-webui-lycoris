@@ -653,8 +653,6 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
         return
   
     lyco_layer_name = getattr(self, 'lyco_layer_name', None)
-    if lyco_layer_name is None:
-        return
 
     current_names = getattr(self, "lyco_current_names", ())
     lora_prev_names = getattr(self, "lora_prev_names", ())
@@ -677,6 +675,8 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
         # print('lyco remove weight')
         self.lyco_weights_backup = None
         lora_weights_backup = None
+    elif lyco_layer_name is None:
+        self.lyco_weights_backup = None
 
     if current_names != wanted_names or lora_prev_names != lora_names:
         if weights_backup is not None and lora_names == lora_prev_names:
