@@ -649,6 +649,9 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
     If not, restores orginal weights from backup and alters weights according to lycos.
     """
 
+    if len(loaded_lycos) == 0:
+        return
+  
     lyco_layer_name = getattr(self, 'lyco_layer_name', None)
     if lyco_layer_name is None:
         return
