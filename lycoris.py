@@ -660,7 +660,7 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
 
     weights_backup = getattr(self, "lyco_weights_backup", None)
     lora_weights_backup = getattr(self, "lora_weights_backup", None)
-    if weights_backup is None:
+    if weights_backup is None and len(loaded_lycos) == 0:
         # print('lyco save weight')
         if isinstance(self, torch.nn.MultiheadAttention):
             weights_backup = (
@@ -723,7 +723,7 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
                 continue
 
             print(3, f'failed to calculate lyco weights for layer {lyco_layer_name}')
-            print(lyco_his, lyco.name not in lyco_his)
+            # print(lyco_his, lyco.name not in lyco_his)
 
         setattr(self, "lora_prev_names", lora_names)
         setattr(self, "lyco_current_names", wanted_names)
