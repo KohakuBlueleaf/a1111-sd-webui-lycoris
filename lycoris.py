@@ -660,7 +660,7 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
 
     weights_backup = getattr(self, "lyco_weights_backup", None)
     lora_weights_backup = getattr(self, "lora_weights_backup", None)
-    if weights_backup is None and len(loaded_lycos) == 0:
+    if weights_backup is None and len(loaded_lycos):
         # print('lyco save weight')
         if isinstance(self, torch.nn.MultiheadAttention):
             weights_backup = (
