@@ -31,7 +31,7 @@ def parse_args(params:list):
         
         if x == 'default':
             x = default
-        else:
+        elif x is not None:
             x = type(x)
         
         args.append(x)
