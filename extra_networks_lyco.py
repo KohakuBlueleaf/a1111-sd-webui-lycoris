@@ -23,11 +23,18 @@ def parse_args(params:list):
     args = []
     for name, default, type in default_args:
         if name in kwarg_list:
-            args.append(type(kwarg_list[name]))
+            x = kwarg_list[name]
         elif arg_list:
-            args.append(type(arg_list.pop(0)))
+            x = arg_list.pop(0)
         else:
-            args.append(default)
+            x = default
+        
+        if x == 'default':
+            x = default
+        else:
+            x = type(x)
+        
+        args.append(x)
     
     return args
 
