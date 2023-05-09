@@ -9,12 +9,6 @@ import torch.nn.functional as F
 
 from modules import shared, devices, sd_models, errors
 
-now_dir = os.path.dirname(os.path.abspath(__file__))
-lora_path = os.path.join(now_dir, '..', '..', 'extensions-builtin/Lora')
-sys.path.insert(0, lora_path)
-import lora
-new_lora = 'lora_calc_updown' in dir(lora)
-
 metadata_tags_order = {"ss_sd_model_name": 1, "ss_resolution": 2, "ss_clip_skip": 3, "ss_num_train_images": 10, "ss_tag_frequency": 20}
 
 
