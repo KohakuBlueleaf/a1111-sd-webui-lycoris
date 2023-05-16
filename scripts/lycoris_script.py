@@ -52,5 +52,5 @@ script_callbacks.on_before_ui(before_ui)
 
 
 shared.options_templates.update(shared.options_section(('extra_networks', "Extra Networks"), {
-    "sd_lyco": shared.OptionInfo("None", "Add LyCORIS to prompt", gr.Dropdown, lambda: {"choices": [""] + [x for x in lycoris.available_lycos]}, refresh=lycoris.list_available_lycos),
+    "sd_lyco": shared.OptionInfo("None", "Add LyCORIS to prompt", gr.Dropdown, lambda: {"choices": ["None"] + [x for x in lycoris.available_lycos]}, refresh=lycoris.list_available_lycos),
 }))
