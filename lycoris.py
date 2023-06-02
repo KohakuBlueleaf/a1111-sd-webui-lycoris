@@ -695,7 +695,11 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
             )
             if module is not None and hasattr(self, 'weight'):
                 # print(lyco_layer_name, multiplier)
-                self.weight += lyco_calc_updown(lyco, module, self.weight) * multiplier
+                updown = lyco_calc_updown(lyco, module, self.weight)
+                if len(self.weight.shape) == 4 and self.weight.shape[1] == 9:
+                    # inpainting model. zero pad updown to make channel[1]  4 to 9
+                    updown = F.pad(updown, (0, 0, 0, 0, 0, 5))
+                self.weight += updown * multiplier
                 continue
 
             module_q = lyco.modules.get(lyco_layer_name + "_q_proj", None)
