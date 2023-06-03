@@ -17,8 +17,21 @@ def unload():
 
 
 def before_ui():
-    ui_extra_networks.register_page(ui_extra_networks_lyco.ExtraNetworksPageLyCORIS())
-    extra_networks.register_extra_network(extra_networks_lyco.ExtraNetworkLyCORIS())
+    if shared.cmd_opts.lyco_patch_lora:
+        print(
+            '=================================\n'
+            'Triggered lyco-patch-lora, will take lora_dir and <lora> format.\n'
+            'lyco_dir and <lyco> format is disabled\n'
+            'This patch may affect other lora extension\n'
+            '(if they don\'t support the lycoris extension or just use lora/lyco to determine which extension is working).\n'
+            '================================='
+        )
+        extra_networks.register_extra_network(extra_networks_lyco.ExtraNetworkLyCORIS(
+            'lora'
+        ))
+    else:
+        ui_extra_networks.register_page(ui_extra_networks_lyco.ExtraNetworksPageLyCORIS())
+        extra_networks.register_extra_network(extra_networks_lyco.ExtraNetworkLyCORIS())
 
 
 if not hasattr(torch.nn, 'Linear_forward_before_lyco'):

@@ -40,17 +40,21 @@ def parse_args(params:list):
 
 
 class ExtraNetworkLyCORIS(extra_networks.ExtraNetwork):
-    def __init__(self):
-        super().__init__('lyco')
+    def __init__(self, base_name = 'lyco'):
+        super().__init__(base_name)
+        self.base_name = base_name
         self.cache = ()
 
     def activate(self, p, params_list):
-        additional = shared.opts.sd_lyco
+        if self.base_name == 'lora':
+            additional = shared.opts.sd_lora
+        elif self.base_name == 'lyco':
+            additional = shared.opts.sd_lyco
 
         if additional != "" and additional in lycoris.available_lycos and len([x for x in params_list if x.items[0] == additional]) == 0:
             p.all_prompts = [
                 x + 
-                f"<lyco:{additional}:{shared.opts.extra_networks_default_multiplier}>" 
+                f"<{self.base_name}:{additional}:{shared.opts.extra_networks_default_multiplier}>" 
                 for x in p.all_prompts
             ]
             params_list.append(
