@@ -26,9 +26,22 @@ def before_ui():
             '(if they don\'t support the lycoris extension or just use lora/lyco to determine which extension is working).\n'
             '================================='
         )
+        for idx, x in enumerate(ui_extra_networks.extra_pages):
+            if x.name=='lora':
+                break
+        else:
+            idx = -1
+        
+        if idx != -1:
+            ui_extra_networks.extra_pages.pop(idx)
+        
+        ui_extra_networks.register_page(ui_extra_networks_lyco.ExtraNetworksPageLyCORIS(
+            'lora'
+        ))
         extra_networks.register_extra_network(extra_networks_lyco.ExtraNetworkLyCORIS(
             'lora'
         ))
+        lycoris.list_available_lycos(shared.cmd_opts.lyco_dir)
     else:
         ui_extra_networks.register_page(ui_extra_networks_lyco.ExtraNetworksPageLyCORIS())
         extra_networks.register_extra_network(extra_networks_lyco.ExtraNetworkLyCORIS())
