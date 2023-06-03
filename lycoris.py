@@ -672,7 +672,7 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
         self.lyco_weights_backup = None
 
     if current_names != wanted_names or lora_prev_names != lora_names:
-        if weights_backup is not None and lora_names == lora_prev_names:
+        if weights_backup is not None and lora_names != ():
             # print('lyco restore weight')
             if isinstance(self, torch.nn.MultiheadAttention):
                 self.in_proj_weight.copy_(weights_backup[0])
@@ -768,15 +768,15 @@ def lyco_MultiheadAttention_load_state_dict(self, *args, **kwargs):
     return torch.nn.MultiheadAttention_load_state_dict_before_lyco(self, *args, **kwargs)
 
 
-def list_available_lycos():
+def list_available_lycos(model_dir=shared.cmd_opts.lyco_dir):
     available_lycos.clear()
 
-    os.makedirs(shared.cmd_opts.lyco_dir, exist_ok=True)
+    os.makedirs(model_dir, exist_ok=True)
 
     candidates = \
-        glob.glob(os.path.join(shared.cmd_opts.lyco_dir, '**/*.pt'), recursive=True) + \
-        glob.glob(os.path.join(shared.cmd_opts.lyco_dir, '**/*.safetensors'), recursive=True) + \
-        glob.glob(os.path.join(shared.cmd_opts.lyco_dir, '**/*.ckpt'), recursive=True)
+        glob.glob(os.path.join(model_dir, '**/*.pt'), recursive=True) + \
+        glob.glob(os.path.join(model_dir, '**/*.safetensors'), recursive=True) + \
+        glob.glob(os.path.join(model_dir, '**/*.ckpt'), recursive=True)
 
     for filename in sorted(candidates, key=str.lower):
         if os.path.isdir(filename):
