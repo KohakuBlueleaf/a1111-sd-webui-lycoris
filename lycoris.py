@@ -642,7 +642,7 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
     If weights already have this particular set of lycos applied, does nothing.
     If not, restores orginal weights from backup and alters weights according to lycos.
     """
-    
+
     lyco_layer_name = getattr(self, 'lyco_layer_name', None)
     if lyco_layer_name is None:
         return
@@ -652,10 +652,21 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
     lora_names = getattr(self, "lora_current_names", ())
     wanted_names = tuple((x.name, x.te_multiplier, x.unet_multiplier, x.dyn_dim) for x in loaded_lycos)
 
+    # We take lora_changed as base_weight changed
+    # but functional lora will not affect the weight so take it as unchanged
+    lora_changed = lora_prev_names != lora_names
+    lora_functional = getattr(shared.opts, 'lora_functional', False)
+    lora_changed = lora_changed and not lora_functional
+
+    lyco_changed = current_names != wanted_names
+
     weights_backup = getattr(self, "lyco_weights_backup", None)
-    lora_weights_backup = getattr(self, "lora_weights_backup", None)
-    if weights_backup is None and len(loaded_lycos):
-        # print('lyco save weight')
+
+    if ((len(loaded_lycos) and weights_backup is None)
+        or (weights_backup is not None and lora_changed)):
+        # backup when:
+        #  * apply lycos but haven't backed up any weights
+        #  * have outdated backed up weights
         if isinstance(self, torch.nn.MultiheadAttention):
             weights_backup = (
                 self.in_proj_weight.to(devices.cpu, copy=True), 
@@ -664,28 +675,18 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
         else:
             weights_backup = self.weight.to(devices.cpu, copy=True)
         self.lyco_weights_backup = weights_backup
-    elif lora_prev_names != lora_names:
-        # print('lyco remove weight')
-        self.lyco_weights_backup = None
-        lora_weights_backup = None
     elif len(loaded_lycos) == 0:
+        # when we unload all the lycos and have no weights to backup
+        # clean backup weights to save ram
         self.lyco_weights_backup = None
 
-    if current_names != wanted_names or lora_prev_names != lora_names:
-        if weights_backup is not None and lora_names != ():
-            # print('lyco restore weight')
+    if lyco_changed or lora_changed:
+        if weights_backup is not None:
             if isinstance(self, torch.nn.MultiheadAttention):
                 self.in_proj_weight.copy_(weights_backup[0])
                 self.out_proj.weight.copy_(weights_backup[1])
             else:
                 self.weight.copy_(weights_backup)
-        elif lora_weights_backup is not None and lora_names == ():
-            # print('lora restore weight')
-            if isinstance(self, torch.nn.MultiheadAttention):
-                self.in_proj_weight.copy_(lora_weights_backup[0])
-                self.out_proj.weight.copy_(lora_weights_backup[1])
-            else:
-                self.weight.copy_(lora_weights_backup)
 
         for lyco in loaded_lycos:
             module = lyco.modules.get(lyco_layer_name, None)
