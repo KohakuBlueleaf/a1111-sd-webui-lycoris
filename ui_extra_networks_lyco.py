@@ -15,7 +15,7 @@ class ExtraNetworksPageLyCORIS(ui_extra_networks.ExtraNetworksPage):
         lycoris.list_available_lycos(self.model_dir)
 
     def list_items(self):
-        for name, lyco_on_disk in lycoris.available_lycos.items():
+        for index, (name, lyco_on_disk) in enumerate(lycoris.available_lycos.items()):
             path, ext = os.path.splitext(lyco_on_disk.filename)
             yield {
                 "name": name,
@@ -30,6 +30,7 @@ class ExtraNetworksPageLyCORIS(ui_extra_networks.ExtraNetworksPage):
                 ),
                 "local_preview": f"{path}.{shared.opts.samples_format}",
                 "metadata": json.dumps(lyco_on_disk.metadata, indent=4) if lyco_on_disk.metadata else None,
+                "sort_keys": {'default': index, **self.get_sort_keys(lyco_on_disk.filename)},
             }
 
     def allowed_directories_for_previews(self):
