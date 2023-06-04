@@ -15,7 +15,7 @@ class ExtraNetworksPageLyCORIS(ui_extra_networks.ExtraNetworksPage):
         lycoris.list_available_lycos(self.model_dir)
 
     def list_items(self):
-        for index, (name, lora_on_disk) in enumerate(lora.available_loras.items()):
+        for index, (name, lyco_on_disk) in enumerate(lycoris.available_lycos.items()):
             path, ext = os.path.splitext(lyco_on_disk.filename)
             yield {
                 "name": name,
