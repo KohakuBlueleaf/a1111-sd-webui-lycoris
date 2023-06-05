@@ -4,6 +4,8 @@ import gradio as gr
 import lycoris
 import extra_networks_lyco
 import ui_extra_networks_lyco
+from lyco_logger import logger
+
 from modules import script_callbacks, ui_extra_networks, extra_networks, shared
 
 
@@ -18,14 +20,7 @@ def unload():
 
 def before_ui():
     if shared.cmd_opts.lyco_patch_lora:
-        print(
-            '=================================\n'
-            'Triggered lyco-patch-lora, will take lora_dir and <lora> format.\n'
-            'lyco_dir and <lyco> format is disabled\n'
-            'This patch may affect other lora extension\n'
-            '(if they don\'t support the lycoris extension or just use lora/lyco to determine which extension is working).\n'
-            '================================='
-        )
+        logger.warning('Triggered lyco-patch-lora, will take lora_dir and <lora> format.')
         for idx, x in enumerate(ui_extra_networks.extra_pages):
             if x.name=='lora':
                 break

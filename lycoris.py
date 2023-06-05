@@ -8,6 +8,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from modules import shared, devices, sd_models, errors
+from lyco_logger import logger
+
 
 metadata_tags_order = {"ss_sd_model_name": 1, "ss_resolution": 2, "ss_clip_skip": 3, "ss_num_train_images": 10, "ss_tag_frequency": 20}
 
@@ -299,7 +301,7 @@ def load_lyco(name, filename):
                 sd_module = shared.sd_model.lyco_layer_mapping.get(m.group(1), None)
         
         if sd_module is None:
-            print(key)
+            logger.warn(f'key failed to match: {key_diffusers}')
             keys_failed_to_match.append(key_diffusers)
             continue
 
@@ -721,8 +723,7 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
             if module is None:
                 continue
 
-            print(3, f'failed to calculate lyco weights for layer {lyco_layer_name}')
-            # print(lyco_his, lyco.name not in lyco_his)
+            logger.error(3, f'failed to calculate lyco weights for layer {lyco_layer_name}')
 
         setattr(self, "lora_prev_names", lora_names)
         setattr(self, "lyco_current_names", wanted_names)

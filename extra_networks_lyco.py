@@ -1,5 +1,6 @@
 from modules import extra_networks, shared
 import lycoris
+from lyco_logger import logger
 
 
 default_args = [
@@ -84,14 +85,7 @@ class ExtraNetworkLyCORIS(extra_networks.ExtraNetwork):
         
         if all_lycos != self.cache:
             for name, te, unet, dyn in all_lycos:
-                print(
-                    "========================================\n"
-                    f"Apply LyCORIS model: {name}\n"
-                    f"Text encoder weight: {te}\n"
-                    f"Unet weight: {unet}\n"
-                    f"DyLoRA Dim: {dyn}"
-                )
-            print("========================================")
+                logger.debug(f"\nApply LyCORIS model: {name}: te={te}, unet={unet}, dyn={dyn}")
             self.cache = all_lycos
         lycoris.load_lycos(names, te_multipliers, unet_multipliers, dyn_dims)
 
