@@ -617,7 +617,7 @@ def rebuild_weight(module, orig_weight: torch.Tensor, dyn_dim: int=None) -> torc
     return updown
 
 
-def lyco_calc_updown(lyco, module, target):
+def lyco_calc_updown(lyco, module, target, multiplier):
     with torch.no_grad():
         updown = rebuild_weight(module, target, lyco.dyn_dim)
         if lyco.dyn_dim and module.dim:
@@ -628,13 +628,14 @@ def lyco_calc_updown(lyco, module, target):
             dim = module.dim
         else:
             dim = None
+        
         scale = (
             module.scale if module.scale is not None
             else module.alpha / dim if dim is not None and module.alpha is not None
             else 1.0
         )
         # print(scale, module.alpha, module.dim, lyco.dyn_dim)
-        updown = updown * scale
+        updown = updown * multiplier * scale
         return updown
 
 
@@ -698,11 +699,11 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
             )
             if module is not None and hasattr(self, 'weight'):
                 # print(lyco_layer_name, multiplier)
-                updown = lyco_calc_updown(lyco, module, self.weight)
+                updown = lyco_calc_updown(lyco, module, self.weight, multiplier)
                 if len(self.weight.shape) == 4 and self.weight.shape[1] == 9:
                     # inpainting model. zero pad updown to make channel[1]  4 to 9
                     updown = F.pad(updown, (0, 0, 0, 0, 0, 5))
-                self.weight += updown * multiplier
+                self.weight += updown
                 continue
 
             module_q = lyco.modules.get(lyco_layer_name + "_q_proj", None)
@@ -711,13 +712,13 @@ def lyco_apply_weights(self: Union[torch.nn.Conv2d, torch.nn.Linear, torch.nn.Mu
             module_out = lyco.modules.get(lyco_layer_name + "_out_proj", None)
 
             if isinstance(self, torch.nn.MultiheadAttention) and module_q and module_k and module_v and module_out:
-                updown_q = lyco_calc_updown(lyco, module_q, self.in_proj_weight)
-                updown_k = lyco_calc_updown(lyco, module_k, self.in_proj_weight)
-                updown_v = lyco_calc_updown(lyco, module_v, self.in_proj_weight)
+                updown_q = lyco_calc_updown(lyco, module_q, self.in_proj_weight, multiplier)
+                updown_k = lyco_calc_updown(lyco, module_k, self.in_proj_weight, multiplier)
+                updown_v = lyco_calc_updown(lyco, module_v, self.in_proj_weight, multiplier)
                 updown_qkv = torch.vstack([updown_q, updown_k, updown_v])
 
                 self.in_proj_weight += updown_qkv
-                self.out_proj.weight += lyco_calc_updown(lyco, module_out, self.out_proj.weight)
+                self.out_proj.weight += lyco_calc_updown(lyco, module_out, self.out_proj.weight, multiplier)
                 continue
 
             if module is None:
