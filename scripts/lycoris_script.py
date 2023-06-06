@@ -4,6 +4,8 @@ import gradio as gr
 import lycoris
 import extra_networks_lyco
 import ui_extra_networks_lyco
+
+import logging
 from lyco_logger import logger
 
 from modules import script_callbacks, ui_extra_networks, extra_networks, shared
@@ -19,6 +21,10 @@ def unload():
 
 
 def before_ui():
+    if shared.cmd_opts.lyco_debug:
+        logger.setLevel(logging.DEBUG)
+        logger.debug("Set lyco ogger level to DEBUG")
+        
     if shared.cmd_opts.lyco_patch_lora:
         logger.warning('Triggered lyco-patch-lora, will take lora_dir and <lora> format.')
         for idx, x in enumerate(ui_extra_networks.extra_pages):
