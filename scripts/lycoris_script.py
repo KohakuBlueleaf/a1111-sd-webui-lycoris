@@ -36,6 +36,17 @@ def before_ui():
         if idx != -1:
             ui_extra_networks.extra_pages.pop(idx)
         
+        for key, x in extra_networks.extra_network_registry.items():
+            if x.name=='lora':
+                break
+        else:
+            key = None
+        
+        if key is not None:
+            lora = extra_networks.extra_network_registry.pop(key)
+            lora.name = 'lora_legacy'
+            extra_networks.register_extra_network(lora)
+        
         ui_extra_networks.register_page(ui_extra_networks_lyco.ExtraNetworksPageLyCORIS(
             'lora'
         ))
