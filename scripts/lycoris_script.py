@@ -42,10 +42,11 @@ def before_ui():
         extra_networks.register_extra_network(extra_networks_lyco.ExtraNetworkLyCORIS(
             'lora'
         ))
-        lycoris.list_available_lycos(shared.cmd_opts.lyco_dir)
+        lycoris.list_available_lycos(shared.cmd_opts.lora_dir)
     else:
         ui_extra_networks.register_page(ui_extra_networks_lyco.ExtraNetworksPageLyCORIS())
         extra_networks.register_extra_network(extra_networks_lyco.ExtraNetworkLyCORIS())
+        lycoris.list_available_lycos(shared.cmd_opts.lyco_dir)
 
 
 if not hasattr(torch.nn, 'Linear_forward_before_lyco'):
