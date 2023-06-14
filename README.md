@@ -26,6 +26,15 @@ Use `<lyco:MODEL:WEIGHT>` to utilize the lycoris model
 ![image](https://user-images.githubusercontent.com/59680068/230762416-be1d3712-65f2-4dd1-ac7a-f403c914dd9b.png)
 
 The launch parameter `--lyco-dir` can be used to define LyCORIS models location path
+## Launch parameter
+aka command_args in sd-webui.
+
+| Argument    | What it does| default|
+| ----------- | ----------- | ----------- |
+| --lyco-dir| the model path for lycoris models | use models/LyCORIS as model directory |
+| --lyco-debug   | debug mode, print out more information when generating images | off |
+| --lyco-patch-lora | replace the built-in lora ext with lycoris ext. will use models/lora(or --lora-dir) and <lora> format. Arguments system still working with this. **This is for who are migrating from locon ext, will let some lora-related ext become unusable** | off |
+
 
 ## Arguments
 sd-webui use this format to use extra networks: `<TYPE:MODEL_NAME:arg1:arg2:arg3...:argn>`<br>
