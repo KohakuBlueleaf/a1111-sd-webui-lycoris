@@ -1,15 +1,34 @@
+
 import torch
 import gradio as gr
 
 import lycoris
 import extra_networks_lyco
 import ui_extra_networks_lyco
+from fastapi import FastAPI
 
 import logging
 from lyco_logger import logger
 
 from modules import script_callbacks, ui_extra_networks, extra_networks, shared
 
+def api_locyoris(_: gr.Blocks, app: FastAPI):
+    @app.get("/sdapi/v1/lycos")
+    async def get_lycos():
+        return [create_lyco_json(obj) for obj in lycoris.available_lycos.values()]
+
+    @app.post("/sdapi/v1/refresh-lycos")
+    async def refresh_lycos():
+        return lycoris.list_available_lycos()
+
+def create_lyco_json(obj: lycoris.LycoOnDisk):
+    return {
+        "name": obj.name,
+        "path": obj.filename,
+        "metadata": obj.metadata,
+    }
+
+script_callbacks.on_app_started(api_locyoris)
 
 def unload():
     torch.nn.Linear.forward = torch.nn.Linear_forward_before_lyco
@@ -23,7 +42,7 @@ def unload():
 def before_ui():
     if shared.cmd_opts.lyco_debug:
         logger.setLevel(logging.DEBUG)
-        logger.debug("Set lyco ogger level to DEBUG")
+        logger.debug("Set lyco logger level to DEBUG")
         
     if shared.cmd_opts.lyco_patch_lora:
         logger.warning('Triggered lyco-patch-lora, will take lora_dir and <lora> format.')
