@@ -21,8 +21,8 @@ There are some options you can choose to install this extension
 
 ## The version of stable-diffusion-webui
 
-Lot of people struggling on some bugs or unexpected behavior after install the extension. We do some research and test on it and can only get this conclusion:`<br>`
-**Make sure your stable diffusion webui is after commit: a9fed7c3** `<br>`
+Lot of people struggling on some bugs or unexpected behavior after install the extension. We do some research and test on it and can only get this conclusion:<br>
+**Make sure your stable diffusion webui is after commit: a9fed7c3** <br>
 (a9fed7c3 itself should work, but if you meet problem on that commit, you should consider to update your sd-webui)
 
 ### LyCORIS
@@ -52,22 +52,22 @@ aka command_args in sd-webui.
 
 ## Arguments
 
-sd-webui use this format to use extra networks: `<TYPE:MODEL_NAME:arg1:arg2:arg3...:argn><br>`
-With more and more different algorithm be implemented into lycoris, the arguments become more.`<br>`
-So I design this arg system to use it more easily(Maybe):`<br>`
-`<br>`
-`<lyco:MODEL:arg1:arg2:k1=v1:k2=v2><br>`
-`<br>`
-For example, we have te/unet/dyn these 3 arguments, if you want te=1, unet=0.5, dyn=13, you can use it like these:`<br>`
-`<lyco:Model:1:0.5:13><br>`
-`<lyco:Model:1:0.5:dyn=13><br>`
-`<lyco:Model:1:unet=0.5:dyn=13><br>`
-And if you specify ALL the key name, you can ignore the order:`<br>`
-(or, actually, we only count the args, no k-v pair, so dyn=13:unet=1:0.5 also work, but 0.5 is for te (the first argument))`<br>`
-`<lyco:Model:dyn=13:te=1:unet=0.5><br>`
-`<br>`
-And since te=1 is default value, you can also do it like this:`<br>`
-`<lyco:Model:unet=0.5:dyn=13><br>`
+sd-webui use this format to use extra networks: `<TYPE:MODEL_NAME:arg1:arg2:arg3...:argn>`<br>
+With more and more different algorithm be implemented into lycoris, the arguments become more.<br>
+So I design this arg system to use it more easily(Maybe):<br>
+<br>
+`<lyco:MODEL:arg1:arg2:k1=v1:k2=v2>`<br>
+<br>
+For example, we have te/unet/dyn these 3 arguments, if you want te=1, unet=0.5, dyn=13, you can use it like these:<br>
+`<lyco:Model:1:0.5:13>`<br>
+`<lyco:Model:1:0.5:dyn=13>`<br>
+`<lyco:Model:1:unet=0.5:dyn=13>`<br>
+And if you specify ALL the key name, you can ignore the order:<br>
+(or, actually, we only count the args, no k-v pair, so dyn=13:unet=1:0.5 also work, but 0.5 is for te (the first argument))<br>
+`<lyco:Model:dyn=13:te=1:unet=0.5>`<br>
+<br>
+And since te=1 is default value, you can also do it like this:<br>
+`<lyco:Model:unet=0.5:dyn=13>`<br>
 
 And here is the list for arguments:
 
