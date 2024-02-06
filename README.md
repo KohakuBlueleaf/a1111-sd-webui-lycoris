@@ -1,4 +1,4 @@
-# a1111-sd-webui-lycoris [sd-webui<1.5.0]
+# a1111-sd-webui-lycoris [sd-webui-forge, sd-webui<1.5.0]
 
 ## NOTICE
 
