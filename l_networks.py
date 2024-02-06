@@ -256,7 +256,7 @@ def purge_networks_from_memory():
 
 
 def load_networks(names, te_multipliers=None, unet_multipliers=None, dyn_dims=None):
-    logger.warning(names)
+    logger.debug(names)
     emb_db = sd_hijack.model_hijack.embedding_db
     already_loaded = {}
 
