@@ -6,14 +6,6 @@ This extension is for stable-diffusion-webui < 1.5.0.
 
 **And stable-diffusion-webui-forge, if you want to use some legacy features.**
 
-After 1.5.0 version of sd-webui, all the functionality of this extension have been merged into sd-webui built-in lora.
-
-If you have any problems like "lack of some functionalities" "want more compatibilities", you can open issues in this repo or sd-webui but plz don't say "BRING THIS BACK". Everyone can BRING THIS BACK, but not me.
-
-(I mean, it is left for old version user, and merged into sd-webui for new version user. it is not disappeared)
-
-I will continuously maintain this extension, adding new algorithms and fixing bugs. However, for the new version sd-webui, all updates will be included in the built-in loras of sd-webui.
-
 ---
 
 An extension for loading lycoris model in sd-webui.
