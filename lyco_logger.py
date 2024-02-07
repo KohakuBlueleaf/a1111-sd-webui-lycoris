@@ -21,7 +21,7 @@ class ColoredFormatter(logging.Formatter):
         return super().format(colored_record)
 
 
-logger = logging.getLogger("lora")
+logger = logging.getLogger("LyCORIS")
 logger.propagate = False
 
 

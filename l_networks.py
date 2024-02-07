@@ -20,7 +20,7 @@ from typing import Union
 from modules import shared, devices, sd_models, errors, scripts, sd_hijack
 import modules.textual_inversion.textual_inversion as textual_inversion
 
-from lora_logger import logger
+from lyco_logger import logger
 
 module_types = [
     network_lora.ModuleTypeLora(),

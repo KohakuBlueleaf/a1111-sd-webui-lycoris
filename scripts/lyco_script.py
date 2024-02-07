@@ -9,7 +9,7 @@ import lyco as lora  # noqa:F401
 import lyco_patches as lora_patches
 import extra_networks_lyco as extra_networks_lora
 import ui_extra_networks_lyco as ui_extra_networks_lora
-from lora_logger import logger
+from lyco_logger import logger
 from modules import script_callbacks, ui_extra_networks, extra_networks, shared
 
 
