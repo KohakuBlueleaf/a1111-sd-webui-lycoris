@@ -48,7 +48,6 @@ aka command_args in sd-webui.
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
 | --lyco-dir        | the model path for lycoris models                                                                                                                                                                                                                          | use models/LyCORIS as model directory |
 | --lyco-debug      | debug mode, print out more information when generating images                                                                                                                                                                                              | off                                   |
-| --lyco-patch-lora | replace the built-in lora ext with lycoris ext. will use models/lora(or --lora-dir) and`<lora>` format. Arguments system still working with this. **This is for who are migrating from locon ext, will let some lora-related ext become unusable** | off                                   |
 
 ## Arguments
 
