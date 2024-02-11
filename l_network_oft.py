@@ -38,7 +38,7 @@ class NetworkModuleOFT(network.NetworkModule):
 
         is_linear = isinstance(self.sd_module, (torch.nn.Linear, torch.nn.modules.linear.NonDynamicallyQuantizableLinear))
         is_conv = isinstance(self.sd_module, (torch.nn.Conv2d))
-        is_other_linear = isinstance(self.sd_module, [torch.nn.MultiheadAttention) # unsupported
+        is_other_linear = isinstance(self.sd_module, (torch.nn.MultiheadAttention)) # unsupported
 
         if is_linear:
             self.out_dim = self.sd_module.out_features
