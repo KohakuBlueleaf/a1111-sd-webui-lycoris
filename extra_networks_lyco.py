@@ -42,7 +42,7 @@ class ExtraNetworkLora(extra_networks.ExtraNetwork):
 
         networks.load_networks(names, te_multipliers, unet_multipliers, dyn_dims)
 
-        if shared.opts.lora_add_hashes_to_infotext:
+        if shared.opts.lyco_add_hashes_to_infotext:
             network_hashes = []
             for item in networks.loaded_networks:
                 shorthash = item.network_on_disk.shorthash

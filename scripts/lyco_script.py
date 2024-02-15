@@ -36,15 +36,15 @@ script_callbacks.on_before_ui(before_ui)
 script_callbacks.on_infotext_pasted(networks.infotext_pasted)
 
 
-shared.options_templates.update(shared.options_section(('extra_networks', "Extra Networks"), {
-    "sd_lora": shared.OptionInfo("None", "Add network to prompt", gr.Dropdown, lambda: {"choices": ["None", *networks.available_networks]}, refresh=networks.list_available_networks),
-    "lora_preferred_name": shared.OptionInfo("Alias from file", "When adding to prompt, refer to Lora by", gr.Radio, {"choices": ["Alias from file", "Filename"]}),
-    "lora_add_hashes_to_infotext": shared.OptionInfo(True, "Add Lora hashes to infotext"),
-    "lora_show_all": shared.OptionInfo(False, "Always show all networks on the Lora page").info("otherwise, those detected as for incompatible version of Stable Diffusion will be hidden"),
-    "lora_hide_unknown_for_versions": shared.OptionInfo([], "Hide networks of unknown versions for model versions", gr.CheckboxGroup, {"choices": ["SD1", "SD2", "SDXL"]}),
-    "lora_in_memory_limit": shared.OptionInfo(0, "Number of Lora networks to keep cached in memory", gr.Number, {"precision": 0}),
-    "lora_not_found_warning_console": shared.OptionInfo(False, "Lora not found warning in console"),
-    "lora_not_found_gradio_warning": shared.OptionInfo(False, "Lora not found warning popup in webui"),
+shared.options_templates.update(shared.options_section(('lycoris', "LyCORIS"), {
+    "sd_lyco": shared.OptionInfo("None", "Add network to prompt", gr.Dropdown, lambda: {"choices": ["None", *networks.available_networks]}, refresh=networks.list_available_networks),
+    "lyco_preferred_name": shared.OptionInfo("Alias from file", "When adding to prompt, refer to Lora by", gr.Radio, {"choices": ["Alias from file", "Filename"]}),
+    "lyco_add_hashes_to_infotext": shared.OptionInfo(True, "Add Lora hashes to infotext"),
+    "lyco_show_all": shared.OptionInfo(False, "Always show all networks on the Lora page").info("otherwise, those detected as for incompatible version of Stable Diffusion will be hidden"),
+    "lyco_hide_unknown_for_versions": shared.OptionInfo([], "Hide networks of unknown versions for model versions", gr.CheckboxGroup, {"choices": ["SD1", "SD2", "SDXL"]}),
+    "lyco_in_memory_limit": shared.OptionInfo(0, "Number of Lora networks to keep cached in memory", gr.Number, {"precision": 0}),
+    "lyco_not_found_warning_console": shared.OptionInfo(False, "Lora not found warning in console"),
+    "lyco_not_found_gradio_warning": shared.OptionInfo(False, "Lora not found warning popup in webui"),
 }))
 
 
@@ -63,18 +63,18 @@ def create_lora_json(obj: network.NetworkOnDisk):
 
 
 def api_networks(_: gr.Blocks, app: FastAPI):
-    @app.get("/sdapi/v1/loras")
+    @app.get("/sdapi/v1/lycos")
     async def get_loras():
         return [create_lora_json(obj) for obj in networks.available_networks.values()]
 
-    @app.post("/sdapi/v1/refresh-loras")
+    @app.post("/sdapi/v1/refresh-lycos")
     async def refresh_loras():
         return networks.list_available_networks()
 
 
 script_callbacks.on_app_started(api_networks)
 
-re_lora = re.compile("<lora:([^:]+):")
+re_lora = re.compile("<lyco:([^:]+):")
 
 
 def infotext_pasted(infotext, d):
@@ -102,4 +102,4 @@ def infotext_pasted(infotext, d):
 
 script_callbacks.on_infotext_pasted(infotext_pasted)
 
-shared.opts.onchange("lora_in_memory_limit", networks.purge_networks_from_memory)
+shared.opts.onchange("lyco_in_memory_limit", networks.purge_networks_from_memory)

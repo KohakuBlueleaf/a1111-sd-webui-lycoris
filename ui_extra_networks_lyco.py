@@ -60,11 +60,11 @@ class ExtraNetworksPageLora(ui_extra_networks.ExtraNetworksPage):
         else:
             sd_version = lora_on_disk.sd_version
 
-        if shared.opts.lora_show_all or not enable_filter:
+        if shared.opts.lyco_show_all or not enable_filter:
             pass
         elif sd_version == network.SdVersion.Unknown:
             model_version = network.SdVersion.SDXL if shared.sd_model.is_sdxl else network.SdVersion.SD2 if shared.sd_model.is_sd2 else network.SdVersion.SD1
-            if model_version.name in shared.opts.lora_hide_unknown_for_versions:
+            if model_version.name in shared.opts.lyco_hide_unknown_for_versions:
                 return None
         elif shared.sd_model.is_sdxl and sd_version != network.SdVersion.SDXL:
             return None
