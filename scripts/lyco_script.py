@@ -21,9 +21,9 @@ def before_ui():
     if 'lyco' in networks.loaded_networks:
         logger.warning("lyco is already in the aliases name, legacy extension will not be loaded")
         return
-    ui_extra_networks.register_page(ui_extra_networks_lora.ExtraNetworksPageLora())
+    ui_extra_networks.register_page(ui_extra_networks_lora.ExtraNetworksPageLyCORIS())
 
-    networks.extra_network_lora = extra_networks_lora.ExtraNetworkLora()
+    networks.extra_network_lora = extra_networks_lora.ExtraNetworkLyCORIS()
     extra_networks.register_extra_network(networks.extra_network_lora)
     logger.warning("LyCORIS legacy extension is now loaded, if you don't expext to see this message, please disable this extension.")
 

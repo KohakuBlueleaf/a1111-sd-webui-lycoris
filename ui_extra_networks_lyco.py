@@ -8,7 +8,7 @@ from modules.ui_extra_networks import quote_js
 from l_ui_edit_user_metadata import LoraUserMetadataEditor
 
 
-class ExtraNetworksPageLora(ui_extra_networks.ExtraNetworksPage):
+class ExtraNetworksPageLyCORIS(ui_extra_networks.ExtraNetworksPage):
     def __init__(self):
         super().__init__('LyCORIS')
 

@@ -2,7 +2,7 @@ from modules import extra_networks, shared
 import l_networks as networks
 
 
-class ExtraNetworkLora(extra_networks.ExtraNetwork):
+class ExtraNetworkLyCORIS(extra_networks.ExtraNetwork):
     def __init__(self):
         super().__init__('lyco')
 
@@ -10,7 +10,7 @@ class ExtraNetworkLora(extra_networks.ExtraNetwork):
         """mapping of network names to the number of errors the network had during operation"""
 
     def activate(self, p, params_list):
-        additional = shared.opts.sd_lora
+        additional = shared.opts.sd_lyco
 
         self.errors.clear()
 
